@@ -10,10 +10,11 @@ app.use(cors());
 
 const socketIO = require('socket.io')(http, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "*"
     }
 });
 let users = [];
+
 socketIO.on('connection', (socket) => {
     console.log(`⚡: ${socket.id} user just connected!`);
     socket.on('message', (data) => {
@@ -73,3 +74,4 @@ app.get('/api', (req, res) => {
 http.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
+
