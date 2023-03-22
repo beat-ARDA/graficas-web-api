@@ -10,9 +10,11 @@ app.use(cors());
 
 const socketIO = require('socket.io')(http, {
     cors: {
-        origin: "*"
+        origin: "*",
+        methods: ["GET", "POST"]
     }
 });
+
 let users = [];
 
 socketIO.on('connection', (socket) => {
@@ -25,7 +27,7 @@ socketIO.on('connection', (socket) => {
     socket.on('newUser', (data) => {
         //Adds the new user to the list of users
         users.push(data);
-        // console.log(users);
+        //console.log(users);
         //Sends the list of users to the client
         socketIO.emit('newUserResponse', users);
     });
