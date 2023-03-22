@@ -29,6 +29,30 @@ socketIO.on('connection', (socket) => {
         socketIO.emit('newUserResponse', users);
     });
 
+    socket.on('moveLeft', () => {
+        socketIO.emit('moveLeft');
+    });
+
+    socket.on('moveRight', () => {
+        socketIO.emit('moveRight');
+    });
+
+    socket.on('moveUp', () => {
+        socketIO.emit('moveUp');
+    });
+
+    socket.on('moveDown', () => {
+        socketIO.emit('moveDown');
+    });
+
+    socket.on('moveLeaveUp', () => {
+        socketIO.emit('moveLeaveUp');
+    });
+
+    socket.on('moveLeaveDown', () => {
+        socketIO.emit('moveLeaveDown');
+    });
+
     socket.on('disconnect', () => {
         console.log('🔥: A user disconnected');
         //Updates the list of users when a user disconnects from the server
