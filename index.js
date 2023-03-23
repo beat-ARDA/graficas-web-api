@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const PORT = 4000;
 
-//New imports
 const http = require('http').Server(app);
 const cors = require('cors');
 
@@ -10,8 +9,7 @@ app.use(cors());
 
 const socketIO = require('socket.io')(http, {
     cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
+        origin: "*"
     }
 });
 
@@ -19,41 +17,33 @@ let users = [];
 
 socketIO.on('connection', (socket) => {
     console.log(`⚡: ${socket.id} user just connected!`);
-    socket.on('message', (data) => {
-        socketIO.emit('messageResponse', data);
-    });
-
-    //Listens when a new user joins the server
-    socket.on('newUser', (data) => {
-        //Adds the new user to the list of users
-        users.push(data);
-        //console.log(users);
-        //Sends the list of users to the client
-        socketIO.emit('newUserResponse', users);
-    });
 
     socket.on('moveLeft', () => {
-        socketIO.emit('moveLeft');
+        socket.broadcast.emit('moveLeft');
     });
 
     socket.on('moveRight', () => {
-        socketIO.emit('moveRight');
+        socket.broadcast.emit('moveRight');
     });
 
     socket.on('moveUp', () => {
-        socketIO.emit('moveUp');
+        socket.broadcast.emit('moveUp');
     });
 
     socket.on('moveDown', () => {
-        socketIO.emit('moveDown');
+        socket.broadcast.emit('moveDown');
     });
 
     socket.on('moveLeaveUp', () => {
-        socketIO.emit('moveLeaveUp');
+        socket.broadcast.emit('moveLeaveUp');
     });
 
     socket.on('moveLeaveDown', () => {
-        socketIO.emit('moveLeaveDown');
+        socket.broadcast.emit('moveLeaveDown');
+    });
+
+    socket.on('shoot', () => {
+        socket.broadcast.emit('shoot');
     });
 
     socket.on('disconnect', () => {
@@ -62,7 +52,7 @@ socketIO.on('connection', (socket) => {
         users = users.filter((user) => user.socketID !== socket.id);
         // console.log(users);
         //Sends the list of users to the client
-        socketIO.emit('newUserResponse', users);
+        socket.broadcast.emit('newUserResponse', users);
         socket.disconnect();
     });
 });
