@@ -19,49 +19,61 @@ let users = [];
 
 socketIO.on('connection', (socket) => {
     console.log(`⚡: ${socket.id} user just connected!`);
+
+    socketIO.emit('socketId', socket.id);
+
     socket.on('message', (data) => {
         socketIO.emit('messageResponse', data);
     });
 
-    //Listens when a new user joins the server
     socket.on('newUser', (data) => {
-        //Adds the new user to the list of users
         users.push(data);
-        //console.log(users);
-        //Sends the list of users to the client
         socketIO.emit('newUserResponse', users);
     });
 
-    socket.on('moveLeft', () => {
-        socketIO.emit('moveLeft');
+    socket.on('moveLeft', (socketId) => {
+        console.log('🤛 moveLeft: ' + socketId);
+        socketIO.emit('moveLeft', socketId);
     });
 
-    socket.on('moveRight', () => {
-        socketIO.emit('moveRight');
+    socket.on('moveLeaveLeft', (socketId) => {
+        console.log('🛅  moveLeaveLeft: ' + socketId);
+        socketIO.emit('moveLeaveLeft', socketId);
     });
 
-    socket.on('moveUp', () => {
-        socketIO.emit('moveUp');
+    socket.on('moveRight', (socketId) => {
+        console.log('🤜 moveRight' + socketId);
+        socketIO.emit('moveRight', socketId);
     });
 
-    socket.on('moveDown', () => {
-        socketIO.emit('moveDown');
+    socket.on('moveUp', (socketId) => {
+        console.log('🔺  moveUp' + socketId);
+        socketIO.emit('moveUp', socketId);
     });
 
-    socket.on('moveLeaveUp', () => {
-        socketIO.emit('moveLeaveUp');
+    socket.on('moveDown', (socketId) => {
+        console.log('🔻  moveDown' + socketId);
+        socketIO.emit('moveDown', socketId);
     });
 
-    socket.on('moveLeaveDown', () => {
-        socketIO.emit('moveLeaveDown');
+    socket.on('moveLeaveUp', (socketId) => {
+        console.log('🔼  moveLeaveUp' + socketId);
+        socketIO.emit('moveLeaveUp', socketId);
+    });
+
+    socket.on('moveLeaveDown', (socketId) => {
+        console.log('🔽  moveLeaveDown' + socketId);
+        socketIO.emit('moveLeaveDown', socketId);
+    });
+
+    socket.on('moveLeaveRight', (socketId) => {
+        console.log('🔎  moveLeaveRight' + socketId);
+        socketIO.emit('moveLeaveRight', socketId);
     });
 
     socket.on('disconnect', () => {
         console.log('🔥: A user disconnected');
-        //Updates the list of users when a user disconnects from the server
         users = users.filter((user) => user.socketID !== socket.id);
-        // console.log(users);
-        //Sends the list of users to the client
         socketIO.emit('newUserResponse', users);
         socket.disconnect();
     });
