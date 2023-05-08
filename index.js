@@ -1,4 +1,7 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const onePlayerRoutes = require('./routes/scoresOnePlayer');
+const twoPlayerRoutes = require('./routes/scoresTwoPlayers');
 const app = express();
 const PORT = 4000;
 
@@ -6,6 +9,8 @@ const PORT = 4000;
 const http = require('http').Server(app);
 const cors = require('cors');
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cors());
 
 const socketIO = require('socket.io')(http, {
@@ -18,18 +23,12 @@ const socketIO = require('socket.io')(http, {
 let users = [];
 
 socketIO.on('connection', (socket) => {
+
     console.log(`⚡: ${socket.id} user just connected!`);
 
-    socketIO.emit('socketId', socket.id);
+    users.push(socket.id);
 
-    socket.on('message', (data) => {
-        socketIO.emit('messageResponse', data);
-    });
-
-    socket.on('newUser', (data) => {
-        users.push(data);
-        socketIO.emit('newUserResponse', users);
-    });
+    socketIO.emit('socketId', { "socketId": socket.id, "posUser": users.length });
 
     socket.on('moveLeft', (socketId) => {
         console.log('🤛 moveLeft: ' + socketId);
@@ -56,6 +55,11 @@ socketIO.on('connection', (socket) => {
         socketIO.emit('moveDown', socketId);
     });
 
+    socket.on('moveShoot', (socketId) => {
+        console.log('🔻  moveShoot' + socketId);
+        socketIO.emit('moveShoot', socketId);
+    });
+
     socket.on('moveLeaveUp', (socketId) => {
         console.log('🔼  moveLeaveUp' + socketId);
         socketIO.emit('moveLeaveUp', socketId);
@@ -71,19 +75,20 @@ socketIO.on('connection', (socket) => {
         socketIO.emit('moveLeaveRight', socketId);
     });
 
+    socket.on('moveLeaveShoot', (socketId) => {
+        console.log('🔎  moveLeaveShoot' + socketId);
+        socketIO.emit('moveLeaveShoot', socketId);
+    });
+
     socket.on('disconnect', () => {
-        console.log('🔥: A user disconnected');
-        users = users.filter((user) => user.socketID !== socket.id);
-        socketIO.emit('newUserResponse', users);
+        users.splice(users.indexOf(socket.id), 1);
+        console.log('🔥: A user disconnected' + users);
         socket.disconnect();
     });
 });
 
-app.get('/api', (req, res) => {
-    res.json({
-        message: 'Hello world',
-    });
-});
+app.use('/api', onePlayerRoutes);
+app.use('/api', twoPlayerRoutes);
 
 http.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
