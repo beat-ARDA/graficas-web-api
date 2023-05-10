@@ -30,8 +30,14 @@ socketIO.on('connection', (socket) => {
 
     socketIO.emit('socketId', { "socketId": socket.id, "posUser": users.length });
 
+    if (users.length === 2)
+        socketIO.emit('sessionReady');
+
+    socket.on('newUser', (infoUser) => {
+        socketIO.emit('newUser', infoUser);
+    });
+
     socket.on('moveLeft', (socketId) => {
-        console.log('🤛 moveLeft: ' + socketId);
         socketIO.emit('moveLeft', socketId);
     });
 
@@ -81,8 +87,8 @@ socketIO.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        users.splice(users.indexOf(socket.id), 1);
         console.log('🔥: A user disconnected' + users);
+        users.splice(users.indexOf(socket.id), 1);
         socket.disconnect();
     });
 });

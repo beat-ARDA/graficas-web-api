@@ -16,5 +16,6 @@ exports.GetScoreTwoPlayer = async (req, res) => {
     try {
         let response = await scoreTwoPlayer.GetScoreTwoPlayer();
         res.json(response);
+
     } catch (error) { console.log(error) }
 };
