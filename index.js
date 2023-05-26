@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const onePlayerRoutes = require('./routes/scoresOnePlayer');
 const twoPlayerRoutes = require('./routes/scoresTwoPlayers');
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 //New imports
 const http = require('http').Server(app);
@@ -100,7 +100,9 @@ app.get('/', (req, res) => {
     res.json('datos');
 });
 
-http.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// http.listen(PORT, () => {
+//     console.log(`Server listening on ${PORT}`);
+// });
 
