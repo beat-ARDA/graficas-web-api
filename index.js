@@ -100,9 +100,7 @@ app.get('/', (req, res) => {
     res.json('datos');
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-// http.listen(PORT, () => {
-//     console.log(`Server listening on ${PORT}`);
-// });
+http.listen(PORT, () => {
+    console.log(`Server listening on ${PORT}`);
+});
 

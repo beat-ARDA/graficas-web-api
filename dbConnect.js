@@ -19,7 +19,6 @@ class dbConnect {
                 console.error('Error de conexión: ' + err.stack);
                 return;
             }
-            console.log('Conexión exitosa con ID ');
         });
     }
 
