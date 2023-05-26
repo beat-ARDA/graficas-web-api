@@ -3,7 +3,7 @@ require('mysql2/promise');
 class dbConnect {
     constructor() {
         this.connection = mysql.createConnection({
-            host: 'localhost',
+            host: '192.168.15.134:3306',
             user: 'root',
             password: 'Pink$1624',
             database: 'spaceJourney',
