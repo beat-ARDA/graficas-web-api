@@ -96,6 +96,10 @@ socketIO.on('connection', (socket) => {
 app.use('/api', onePlayerRoutes);
 app.use('/api', twoPlayerRoutes);
 
+app.get('/', (req, res) => {
+    res.json('datos');
+});
+
 http.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
 });
